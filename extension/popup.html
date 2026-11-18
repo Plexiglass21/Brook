@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brook</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wordmark">
+      <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M4 11.5c6.2-6 11.9 6 19 .5 2-1.5 3.2-2.5 5-2.5M4 19.5c6.2-6 11.9 6 19 .5 2-1.5 3.2-2.5 5-2.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span>brook</span>
+    </div>
+    <div class="header-tools">
+      <span id="connection" class="connection" title="Stato del motore locale"><span class="dot"></span><span id="connectionText">Connetto…</span></span>
+      <button id="refresh" class="icon-button" title="Aggiorna" aria-label="Aggiorna sorgenti">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2 6m2-6V5m0 6h-6"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <span id="domain" class="domain">Pagina attuale</span>
+      <h1 id="pageTitle">Video nella pagina</h1>
+      <p id="summary">Avvia il video per trovarlo qui.</p>
+    </section>
+
+    <section id="activity" class="activity" hidden aria-live="polite">
+      <div class="activity-head"><span id="activityLabel">Download in corso</span><span id="activityPercent"></span></div>
+      <div class="activity-title" id="activityTitle"></div>
+      <div class="activity-progress" id="activityTrack" hidden><div id="activityFill"></div></div>
+      <p id="activityText"></p>
+    </section>
+
+    <section id="results" class="results" aria-live="polite"></section>
+
+    <section id="empty" class="empty" hidden>
+      <div class="empty-art" aria-hidden="true">
+        <svg viewBox="0 0 128 92" width="136" height="98"><path d="M10 64q16-18 34 0t35 0t39 0" fill="none" stroke="#A4BCB0" stroke-width="3" stroke-linecap="round"/><path d="M15 75q16-18 34 0t35 0t31 0" fill="none" stroke="#CFDED4" stroke-width="3" stroke-linecap="round"/><circle cx="63" cy="34" r="24" fill="#E7EDE5"/><path d="m57 23 18 11-18 11z" fill="#668C79"/></svg>
+      </div>
+      <h2>Qui è ancora tutto tranquillo.</h2>
+      <p>Avvia un video nella scheda, poi torna su Brook.</p>
+      <button id="emptyAnalyze" class="quiet-cta">Cerca nella pagina <span aria-hidden="true">↗</span></button>
+    </section>
+
+    <div id="notice" class="notice" role="status" hidden></div>
+
+
+    <details id="advanced" class="advanced">
+      <summary><span>Altre sorgenti e strumenti</span><span id="advancedCount"></span></summary>
+      <div class="advanced-content">
+        <div id="rawSources" class="raw-sources"></div>
+        <div class="tool-actions">
+          <button id="analyzePage" class="link-button">Analizza pagina</button>
+          <button id="checkSources" class="link-button">Verifica sorgenti</button>
+          <button id="clear" class="link-button muted">Pulisci elenco</button>
+        </div>
+      </div>
+    </details>
+  </main>
+  <footer><span>Un download alla volta, con calma.</span><span class="version">v1.1</span></footer>
+
+  <div id="previewOverlay" class="overlay" hidden>
+    <section class="sheet preview-sheet" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+      <div class="sheet-head"><div><span class="overline">ANTEPRIMA</span><h2 id="previewTitle">Video</h2></div><button id="closePreview" class="icon-button" aria-label="Chiudi anteprima">✕</button></div>
+      <div class="player-frame">
+        <video id="previewVideo" controls playsinline preload="metadata" hidden></video>
+        <div id="previewLoading" class="preview-loading"><span class="spinner"></span><p>Preparo un'anteprima…</p><small>Per gli streaming può richiedere qualche secondo.</small></div>
+      </div>
+      <p id="previewNote" class="preview-note">L'anteprima non scarica il file completo.</p>
+      <button id="openPage" class="link-button" hidden>Apri il video nella pagina originale ↗</button>
+    </section>
+  </div>
+
+  <div id="saveOverlay" class="overlay" hidden>
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
+      <div class="sheet-head"><div><span class="overline">SALVATAGGIO</span><h2 id="saveTitle">Salva il video</h2></div><button id="closeSave" class="icon-button" aria-label="Chiudi">✕</button></div>
+      <label class="field-label" for="filename">Nome del file</label>
+      <input type="text" id="filename" spellcheck="false" maxlength="110" placeholder="Nome del video" autocomplete="off">
+      <div id="qualityWrap" class="field"><label class="field-label" for="quality">Qualità</label><select id="quality"><option value="">Migliore disponibile</option></select></div>
+      <div id="languageWrap" class="field" hidden><label class="field-label" for="language">Lingua audio</label><select id="language"><option value="">Predefinita</option></select></div>
+      <div id="pairWrap" class="field" hidden><label class="field-label" for="pairAudio">Traccia audio separata</label><select id="pairAudio"><option value="">Automatico / nessuna traccia aggiuntiva</option></select><p class="field-help">Abbina solo le tracce dello stesso video.</p></div>
+      <div id="containerWrap" class="field"><label class="field-label" for="container">Formato</label><select id="container"><option value="mp4">MP4 · consigliato per Windows</option><option value="mkv">Originale · MKV se necessario</option></select></div>
+      <label id="silentWrap" class="check-option" hidden><input type="checkbox" id="allowSilent"><span>Scarica senza audio (solo se lo desideri)</span></label>
+      <label class="check-option"><input type="checkbox" id="askWhere" checked><span>Chiedimi dove salvarlo</span></label>
+      <p id="saveError" class="form-error" hidden></p>
+      <div class="sheet-actions"><button id="cancelSave" class="plain-button">Annulla</button><button id="startDownload" class="filled-button">Scarica</button></div>
+    </section>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

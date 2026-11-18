@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Brook",
+  "short_name": "Brook",
+  "version": "1.1.0",
+  "minimum_chrome_version": "116",
+  "description": "Trova, guarda in anteprima e salva video non protetti, con streaming HLS/DASH e download locale.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "webRequest",
+    "downloads",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Brook — video nella pagina",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}

@@ -1,0 +1,18 @@
+# Personal or generated native messaging config
+native/com.streamscout.personal.json
+native/launch.sh
+
+# Python/cache and OS metadata
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+Thumbs.db
+
+# Local packages and signing keys
+*.crx
+*.pem
+*.key
+.venv/
+venv/
+*.zip
