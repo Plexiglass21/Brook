@@ -37,6 +37,7 @@ class HostTests(unittest.TestCase):
     def test_cancel_chooser_does_not_download(self):
         responses = []
         with patch.object(host, 'send', side_effect=responses.append), \
+             patch.object(host, 'ffmpeg_tools', return_value=('ffmpeg', 'ffprobe')), \
              patch.object(host, 'choose_folder', return_value=None), \
              patch.object(host.subprocess, 'Popen') as popen:
             host.handle_download({'url': 'https://example.com/stream.m3u8', 'askWhere': True, 'fileName': 'Test'})
