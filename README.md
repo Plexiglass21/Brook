@@ -1,104 +1,204 @@
-# Brook
+<div align="center">
+  <img src="extension/icons/128.png" alt="Brook logo" width="84" height="84">
 
-**Brook v1.1.0** è un’estensione per Google Chrome (Manifest V3) che rileva video e audio nelle pagine web. Permette di visualizzare un’anteprima e salvare file diretti (per esempio MP4 e WebM) con Chrome, oppure gestire HLS (`.m3u8`) e DASH (`.mpd`) attraverso un motore locale basato su **Python, yt-dlp e FFmpeg**.
+  # Brook
 
-> **Stato:** progetto sperimentale. Non tutti i siti e i formati sono supportati. Brook non aggira DRM, non estrae cookie o credenziali e non garantisce l’accesso a video protetti o riservati. Usa Brook solo per contenuti che sei autorizzato a scaricare.
+  **Detect. Preview. Download.**
 
-## Funzioni
+  A lightweight Chrome extension for discovering and saving supported video resources from the browser.
 
-- Rilevamento delle sorgenti multimediali mediante richieste di rete e HTML della pagina.
-- Elenco dei video trovati, con titolo, risoluzione e durata quando disponibili.
-- Download diretto con Chrome per file video riconosciuti, **senza installare il motore Python**.
-- Download di flussi HLS/DASH e analisi avanzata delle pagine con il motore locale.
-- Anteprima diretta o generata localmente tramite FFmpeg, scelta della cartella e del nome file.
-- Selezione di qualità e lingua audio quando l’analisi riesce a identificarle.
+  ![Version](https://img.shields.io/badge/version-1.1.0-5a786a)
+  ![Chrome](https://img.shields.io/badge/Chrome-Manifest%20V3-5a786a)
+  ![License](https://img.shields.io/badge/license-MIT-5a786a)
+  ![Platform](https://img.shields.io/badge/native%20engine-Windows%20%7C%20macOS-5a786a)
 
-## Requisiti
+</div>
 
-- Google Chrome (versione 116 o successiva).
-- Per **HLS/DASH, anteprime elaborate e analisi avanzata**: Python 3, pacchetto `yt-dlp` e programmi FFmpeg/FFprobe.
-- Script di configurazione del motore forniti per **Windows e macOS**; Linux non dispone al momento di uno script di installazione dedicato.
+Brook detects media URLs from web pages and network requests. It can list available sources, show a preview, and download **direct video files through Chrome**. For **HLS (`.m3u8`)**, **DASH (`.mpd`)**, and advanced media analysis, Brook uses an optional local engine built with **Python, yt-dlp, and FFmpeg**.
 
-## Installare Brook da GitHub
+> [!NOTE]
+> Brook is an **experimental project**, not a universal video downloader. Compatibility depends on the website and media format. It does **not** bypass DRM or retrieve cookies or login credentials. Only download content you own or are authorized to save.
 
-1. Apri il repository su GitHub, clicca **Code → Download ZIP**, estrai l’archivio e sposta la cartella in un luogo definitivo. **Non cancellare né spostare la cartella dopo aver collegato il motore locale.**
-2. Apri Google Chrome e visita `chrome://extensions`.
-3. Attiva **Modalità sviluppatore** in alto a destra.
-4. Premi **Carica estensione non pacchettizzata** e seleziona la cartella **`extension`** (non la cartella principale del repository).
-5. Usa l’icona Brook nella barra di Chrome, apri una pagina con un file video e avvia la riproduzione. I file diretti possono essere scaricati già adesso.
+## Preview
 
-L’estensione chiede accesso alle pagine e alle richieste di rete per individuare le risorse video. I permessi e l’informativa sono documentati in [`PRIVACY.md`](PRIVACY.md).
+<div align="center">
+  <img src="docs/images/brook-in-browser.png" alt="Brook extension detecting a video while browsing" width="880">
+  <p><sub>Brook detects media in the current browser tab.</sub></p>
+</div>
 
-## Abilitare HLS/DASH e le funzioni avanzate (Windows)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/images/brook-detected-media.png" alt="Brook popup showing one detected video and the download button" width="370"><br>
+      <sub><b>1. Discover media</b> — see what Brook found on the page.</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/images/brook-save-dialog.png" alt="Brook save dialog with filename, format and destination selection" width="370"><br>
+      <sub><b>2. Save your video</b> — select a filename, format and destination when supported.</sub>
+    </td>
+  </tr>
+</table>
 
-1. Installa **Python 3** dal sito ufficiale. Verifica che da PowerShell funzioni `py -3 --version`.
-2. Installa `yt-dlp` da PowerShell:
+<details>
+<summary><b>More screenshots — video previews</b></summary>
+
+<br>
+<table>
+  <tr>
+    <td align="center" width="50%"><img src="docs/images/brook-video-preview-1.png" alt="Brook video preview dialog example" width="360"></td>
+    <td align="center" width="50%"><img src="docs/images/brook-video-preview-2.png" alt="Another Brook video preview example" width="360"></td>
+  </tr>
+</table>
+
+The examples show third-party page content for illustration; Brook is not affiliated with the featured sites or content owners.
+</details>
+
+## Features
+
+- **Automatic media discovery:** identifies supported media resources from page HTML and network activity.
+- **Clean, compact interface:** displays detected items with available details such as title, resolution and duration.
+- **Direct downloads:** saves recognized direct files (for example MP4 or WebM) using Chrome's built-in download API, **without installing Python**.
+- **Streaming support:** processes HLS and DASH sources through the optional local engine.
+- **Video previews:** plays directly available previews or generates previews locally with FFmpeg when supported.
+- **Download options:** lets you choose the filename, output format, save location, and available quality/audio tracks when the source and engine expose them.
+- **Additional tools:** use page analysis and source inspection when automatic discovery is not enough.
+
+### What needs the native engine?
+
+| Capability | Chrome extension only | Local engine required |
+| --- | :---: | :---: |
+| Detect supported media resources | ✅ | — |
+| Download recognized direct video files | ✅ | — |
+| Download HLS / DASH streams | — | ✅ |
+| Advanced page/source analysis | — | ✅ |
+| FFmpeg-generated previews and processing | — | ✅ |
+
+## Installation
+
+### 1. Install the Chrome extension
+
+**Requirements:** Google Chrome **116+**.
+
+1. Select **Code → Download ZIP** on this repository, or download the source ZIP from a [Release](../../releases).
+2. Extract it into a **permanent folder** on your computer. If you later configure the native engine, do not move or delete that folder without reinstalling the integration.
+3. Open `chrome://extensions` in Chrome.
+4. Turn on **Developer mode** (top-right corner).
+5. Click **Load unpacked** and select the **`extension`** folder inside the extracted project — not the repository root.
+6. Optionally pin Brook from the Chrome extensions menu.
+
+Open a page containing a supported video, start playback if necessary, and select Brook. **Direct-file downloads can work immediately**; the next step is only for advanced features.
+
+> [!TIP]
+> Each unpacked installation has its own **extension ID** (visible at `chrome://extensions`). You will need this ID if you enable the native engine.
+
+### 2. Optional: enable HLS / DASH and advanced tools
+
+The native engine uses Chrome **Native Messaging** to communicate with a locally installed Python program. It is **not** installed automatically when you load the extension.
+
+#### Windows
+
+1. Install **Python 3** and confirm that PowerShell recognizes `py -3 --version`.
+2. Install yt-dlp:
 
    ```powershell
    py -3 -m pip install --upgrade yt-dlp
    ```
 
-3. Installa **FFmpeg** e assicurati che `ffmpeg -version` e `ffprobe -version` funzionino da PowerShell. Se hai appena modificato il PATH, chiudi e riapri Chrome.
-4. Da `chrome://extensions`, individua Brook e copia il suo **ID** (32 lettere).
-5. Apri PowerShell nella cartella principale del progetto e lancia:
+3. Install **FFmpeg**, including `ffprobe`, and make both accessible on your `PATH`. Check with `ffmpeg -version` and `ffprobe -version`.
+4. Go to `chrome://extensions`, find Brook, and copy the 32-character **ID**.
+5. Open PowerShell in the project's root folder and run:
 
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .\native\install_windows.ps1 -ExtensionId "INCOLLA_QUI_ID_ESTENSIONE"
+   powershell -ExecutionPolicy Bypass -File .\native\install_windows.ps1 -ExtensionId "YOUR_EXTENSION_ID"
    ```
 
-6. Chiudi tutte le finestre di Chrome, riaprilo e verifica che Brook indichi **Pronto**.
+6. Fully close and reopen Chrome. Brook should show **Pronto** (Ready) when the engine is connected.
 
-Lo script genera il file `native/com.streamscout.personal.json` **specifico del tuo PC** e registra l’host Native Messaging nel registro Windows. Questo file è escluso da Git e non va condiviso. Il nome tecnico `com.streamscout.personal` è mantenuto per compatibilità con le precedenti installazioni.
+The installer creates a machine-specific Native Messaging configuration in the `native/` folder and registers it in Windows. Do **not** publish this generated file; it is excluded from Git. The internal host name `com.streamscout.personal` is kept for compatibility with older installations.
 
-**Se Brook mostra “Motore offline”:** verifica che Python, `yt-dlp`, `ffmpeg` e `ffprobe` siano raggiungibili; ripeti lo script usando l’ID corretto. Per i file diretti non è necessario il motore locale.
+#### macOS
 
-## Abilitare HLS/DASH e le funzioni avanzate (macOS)
-
-1. Installa Python 3, `yt-dlp` e FFmpeg/FFprobe (ad esempio FFmpeg con Homebrew: `brew install ffmpeg`).
-2. Nella cartella del repository, installa `yt-dlp` usando l’interprete che verrà configurato:
+1. Install **Python 3**, **yt-dlp**, and **FFmpeg/FFprobe** (for example, FFmpeg using Homebrew: `brew install ffmpeg`).
+2. Install yt-dlp with the Python interpreter that will be used by the host:
 
    ```bash
    python3 -m pip install --upgrade yt-dlp
    ```
 
-   Se Python è gestito da un package manager che blocca `pip`, configura prima un ambiente Python adatto; l’installer usa l’interprete `python3` individuato dal terminale.
-3. Carica la cartella `extension` in Chrome, copia l’ID dell’estensione e dalla cartella principale esegui:
+   If your Python installation prevents system-level `pip` changes, use a suitable Python environment before running the installer.
+3. Find Brook's **extension ID** at `chrome://extensions`.
+4. In Terminal, from the project root, run:
 
    ```bash
-   bash native/install_macos.sh ID_ESTENSIONE
+   bash native/install_macos.sh YOUR_EXTENSION_ID
    ```
 
-4. Chiudi e riapri Chrome. Per la finestra “Scegli dove salvare” il tuo Python deve includere `tkinter`; in alternativa disattiva la scelta manuale della cartella.
+5. Fully close and reopen Chrome, then check the engine status in Brook.
 
-## Utilizzo
+If you want the native **Choose where to save** dialog, Python must provide `tkinter`; otherwise, disable manual folder selection.
 
-- Avvia un video nella scheda corrente e apri Brook.
-- Per un MP4/WebM diretto, premi **Scarica** e scegli il nome/destinazione. Chrome gestisce il salvataggio del file originale.
-- Per uno streaming HLS/DASH, verifica di aver installato il motore, premi **Scarica**, scegli qualità e formato quando disponibili e avvia il download.
-- **Analizza pagina** prova a identificare contenuti non rilevati automaticamente. **Verifica sorgenti** analizza formato e tracce; questa operazione può richiedere richieste di rete ai siti da cui provengono i video.
-- Il motore locale salva per impostazione predefinita in `Downloads/Brook/` se non scegli un’altra cartella.
+**Linux:** no dedicated native-engine installer is included yet. The unpacked Chrome extension can still be loaded manually.
 
-## Test del progetto
+## Usage
 
-Sono disponibili test automatici senza download reali:
+1. **Open a supported video page** and, if needed, start playback so the media requests become visible.
+2. **Open Brook** from the browser toolbar to review the detected media.
+3. **Preview** an item when available.
+4. **Download:** choose the filename and format/options offered for that source, then confirm the save location if prompted.
+5. For HLS/DASH content, connect the **native engine** first. The additional source-analysis tools can help discover available streams and tracks.
+
+By default, native-engine downloads are stored in `Downloads/Brook/` unless you choose another folder.
+
+### Troubleshooting
+
+| Problem | What to check |
+| --- | --- |
+| **Engine offline / Motore offline** | Install Python, yt-dlp and FFmpeg; run the native installer with the correct extension ID; restart Chrome. |
+| **No video detected** | Play the video, refresh the page and try again. Not all websites expose supported sources. |
+| **Download options missing** | Quality, audio languages and formats depend on what the source and analysis provide. |
+| **Folder picker does not open on macOS** | Ensure the configured Python supports `tkinter`, or disable manual destination selection. |
+| **Native engine stopped working after moving the project** | Re-run the OS-specific installer from the new permanent folder. |
+
+## Project structure
+
+```text
+Brook/
+├── extension/             # Chrome extension (Manifest V3)
+├── native/                # Python engine and Native Messaging installers
+├── docs/images/           # README screenshots
+├── tests/                 # Automated tests
+├── .github/workflows/     # GitHub Actions tests
+├── README.md
+├── PRIVACY.md
+├── LICENSE
+└── requirements.txt
+```
+
+### Run tests
+
+No real video downloads are performed by these tests:
 
 ```bash
 python -m unittest discover -s tests -v
 node tests/test_background.cjs
 ```
 
-Node.js è necessario **solo** per eseguire il test JavaScript, non per utilizzare Brook.
+Node.js is only required to run the JavaScript tests, **not** to use Brook.
 
-## Sviluppo e pubblicazione
+## Privacy and permissions
 
-- Codice dell’estensione: `extension/`
-- Motore Python e installer Native Messaging: `native/`
-- Test: `tests/`
-- Informativa: [`PRIVACY.md`](PRIVACY.md)
-- Licenza: [`MIT`](LICENSE). Prima di rendere pubblico il repository, verifica che la licenza MIT rispecchi la tua volontà: consente anche ridistribuzione e uso commerciale del codice.
+Brook requests access to browser tabs, web requests, downloads and Native Messaging to discover media and perform its features. This includes permissions for HTTP/HTTPS pages. The native engine may contact the original media website to inspect/download a source.
 
-Per contribuire apri una Issue su GitHub e indica Chrome, sistema operativo, versione dell’estensione e riproduzione del problema **senza includere link firmati, cookie, token o dati personali**.
+See [PRIVACY.md](PRIVACY.md) for the project's current privacy information. Never share personal Native Messaging manifests, authentication tokens, signed URLs or private media links in Issues.
 
-### Nota sulla distribuzione
+## Contributing
 
-GitHub rende disponibile il sorgente per l’installazione manuale in **Modalità sviluppatore**, ma non sostituisce il **Chrome Web Store**: per offrire il normale pulsante «Aggiungi a Chrome» occorre pubblicare separatamente la sola cartella `extension` nello Store. **Il motore locale non viene installato dal Chrome Web Store**: ha comunque bisogno di Python, FFmpeg e dello script di configurazione Native Messaging sul PC dell’utente.
+Bug reports, feature suggestions and pull requests are welcome. Please [open an Issue](../../issues) and include your operating system, Chrome version, Brook version, steps to reproduce and **non-sensitive** logs. Do not include private links, cookies, credentials or personal information.
+
+## License
+
+Released under the [MIT License](LICENSE). See the license for redistribution and commercial-use terms.
+
+---
+
+<div align="center"><sub>Brook v1.1.0 · An independent, experimental open-source project.</sub></div>
